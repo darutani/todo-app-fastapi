@@ -1,4 +1,5 @@
 from typing import List, Tuple
+from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.engine import Result
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -34,3 +35,17 @@ async def create_task(db: AsyncSession, task_create: task_schema.TaskCreate) -> 
     await db.commit()
     await db.refresh(task)
     return task
+
+
+async def update_task(db: AsyncSession, task_update: task_schema.TaskCreateResponse) -> task_model.Task:
+    target_task = await db.get(task_model.Task, task_update.id)
+
+    if target_task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    target_task.title = task_update.title
+
+    await db.commit()
+    await db.refresh(target_task)
+    
+    return target_task
