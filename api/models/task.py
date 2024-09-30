@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from api.db import Base
